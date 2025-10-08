@@ -1,4 +1,4 @@
-# NLP下游任务
+# NLP 下游任务
 
 1. **文本分类**：
    - **情感分析**：识别文本中的情感倾向（正面、负面或中性）。
@@ -39,7 +39,7 @@
     - **任务型对话**：完成特定任务（如订餐、预订机票）的对话系统。
     - **闲聊机器人**：与用户进行自然对话的聊天机器人。
 
-# NLP任务处理步骤
+# NLP 任务处理步骤
 
 ## 数据预处理
 
@@ -48,8 +48,8 @@
 **将句子拆解为词或子词的过程**
 
 - **基于空格的分词**：在英语等以空格分隔的语言中，简单分词即可，但对像中文这样没有空格的语言效果不好。
-- **BPE（Byte-Pair Encoding）**：BPE可以将词分解成子词单元，使模型能够处理未知词汇并减少词表大小。可以使用工具 [sentencepiece](https://github.com/google/sentencepiece) 或 [subword-nmt](https://github.com/rsennrich/subword-nmt) 进行BPE分词。
-- **WordPiece**：类似于BPE的分词方法，广泛应用于BERT等模型中。
+- **BPE（Byte-Pair Encoding）**：BPE 可以将词分解成子词单元，使模型能够处理未知词汇并减少词表大小。可以使用工具 [sentencepiece](https://github.com/google/sentencepiece) 或 [subword-nmt](https://github.com/rsennrich/subword-nmt) 进行 BPE 分词。
+- **WordPiece**：类似于 BPE 的分词方法，广泛应用于 BERT 等模型中。
 
 ### 转换为小写
 
@@ -74,7 +74,7 @@
 
 ### 将词汇转化为数字
 
-使用词汇表将每个词或子词转换成唯一的ID
+使用词汇表将每个词或子词转换成唯一的 ID
 
 常见方法是利用`<UNK>`符号表示**词汇表外**的词，并添加 `<SOS>`、`<EOS>` 标记表示句子开头和结尾
 
@@ -209,12 +209,12 @@ $$
 ##### Skip-Gram
 
 **Skip-Gram**：模型的目标是**给定中心词预测其上下文词**。适用于大数据集，且效果更好。
+
 $$
 L=-\sum_{t=1}^T\sum_{-c\leq j\leq c,j\neq0}\log P(w_t|w_{t+i})
 $$
 
-
-序列数据：w_1,w_2,...,w_n （序列长度为n的`token ID`数据）
+序列数据：w_1,w_2,...,w_n （序列长度为 n 的`token ID`数据）
 
 #### GloVe
 
@@ -222,37 +222,43 @@ $$
 
 # 1. n-gram
 
-## 1.1 n-gram定义
+## 1.1 n-gram 定义
 
 `n-gram` 语言模型是自然语言处理（NLP）中的一种基础**统计模型**，用于**预测文本序列中下一个词的概率**。它基于马尔科夫假设，即每个词的出现仅依赖于前面有限个词的出现。
 
-给定单词序列W1,W2,...,WT，语言模型的的目标是计算该序列的概率：
+给定单词序列 W1,W2,...,WT，语言模型的的目标是计算该序列的概率：
+
 $$
 P(w_1,w_2,...,w_T)=P(w_1)\cdot P(w_2|w_1)\cdot P(w_3|w_1,w_2)\cdot ...\cdot P(w_T|w_1,w_2,...,w_{T-1})
 $$
+
 直接计算这种联合概率是非常困难的，因为需要考虑非常长的词序列。因此，`n-gram` 语言模型引入了*马尔科夫假设*，**即一个词的出现只与前面固定数量的词有关**，而与更远的词无关。最终简化为：
 
 - `unigram`（1-gram）：每个词出现的概率是独立的
+
   $$
   P(w_1,w_2,...,w_T)=P(w_1)\cdot P(w_2)\cdot...\cdot P(w_T)
   $$
 
 - `bigram`（2-gram）：每个词只依赖于前一个词
+
   $$
   P(w_1,w_2,...,w_T)=P(w_1)\cdot P(w_2|w_1)\cdot P(w_3|w_2)\cdot...\cdot P(w_T|w_{T-1})
   $$
 
 - `trigram`（3-gram）：每个词只依赖于前两个词
+
   $$
   P(w_1,w_2,...,w_T)=P(w_1)\cdot P(w_2|w_1)\cdot P(w_3|w_1,w_2)\cdot...\cdot P(w_T|w_{T-2},w_{T-1})
   $$
 
-- 一般的`n-gram`：每个词只依赖于前n-1个词
+- 一般的`n-gram`：每个词只依赖于前 n-1 个词
   $$
   P(w_1,w_2,...,w_T)=P(w_1)\cdot P(w_2|w_1)\cdot...\cdot P(w_T|w_{T-n+1},w_{T-1})
   $$
 
 `n-gram`**模型的概率计算**
+
 $$
 P(w_T|w_{T-n+1},w_{T-1})=\frac{Count(w_{T-n+1},...,w_T)}{Count(w_{T-n+1},...,w_{T-1})}
 $$
@@ -269,16 +275,18 @@ $$
 
 # 2. RNN
 
-**循环神经网络**（Recurrent Neural Network, `RNN`）是一种专门设计用于**处理序列数据**的神经网络。与传统的前馈神经网络不同，RNN可以保持内部状态（或称为记忆），这使得它们能够捕捉时间序列中的依赖关系。
+**循环神经网络**（Recurrent Neural Network, `RNN`）是一种专门设计用于**处理序列数据**的神经网络。与传统的前馈神经网络不同，RNN 可以保持内部状态（或称为记忆），这使得它们能够捕捉时间序列中的依赖关系。
 
-<img srcsrc="..\Images\20200727171017364.png" style="zoom:67%;" >
+<img src="./images/readme/RNN.png" style="zoom:67%;" >
 
 对当前时间步`t`进行特征提取时，考虑之前时间步的信息（**隐藏状态**）
+
 $$
 在每个时间步t，RNN接收一个输入向量x_t，并且结合上一时间步的隐藏状态h_{t-1}来产生当前时间步的隐藏状态h_t。\\输出y_t通常是基于当前隐藏状态h_t计算得到的
 $$
 
 - 当前时间步的隐藏状态：当前**时间步的输入**信息与**前一时间步的隐藏状态**（包含了前面序列的所有信息）
+
   $$
   h_t=f(W_{hh}*h_{t-1}+W_{xh}*x_t+b)
   $$
@@ -288,17 +296,18 @@ $$
   y_t=g(W*h_t+b)
   $$
 
-**RNN缺点**：RNN难以学习长时间跨度的信息依赖关系。当序列很长时，梯度可能消失或爆炸，导致训练困难。
+**RNN 缺点**：RNN 难以学习长时间跨度的信息依赖关系。当序列很长时，梯度可能消失或爆炸，导致训练困难。
 
 # 3. LSTM
 
-LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），专门用于解决传统RNN在长序列数据中存在的**长期依赖问题**
+LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），专门用于解决传统 RNN 在长序列数据中存在的**长期依赖问题**
 
-加入**细胞状态**和**三个门控机制**解决RNN的缺点
+加入**细胞状态**和**三个门控机制**解决 RNN 的缺点
 
-<img src="..\Images\d48ee7294f7a4fa7b9525b53250f3622.png" alt="d48ee7294f7a4fa7b9525b53250f3622" style="zoom:50%;" />
+<img src="./images/readme/LSTM.png" alt="d48ee7294f7a4fa7b9525b53250f3622" style="zoom:50%;" />
 
 1. **遗忘门（Forget Gate）**：决定哪些信息应该从细胞状态中被遗忘。
+
    $$
    f_t=\sigma(W_f\cdot [h_{t-1},x_t]+b_f)
    $$
@@ -306,6 +315,7 @@ LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），
 2. **输入门（Input Gate）**：决定哪些新的信息应该被添加到细胞状态中。
 
    - 输入门控制：决定需要更新的信息比例
+
      $$
      i_t=\sigma (W_i\cdot [h_{t-1},x_t]+b_i)
      $$
@@ -316,32 +326,35 @@ LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），
      $$
 
 3. **细胞状态更新**：结合遗忘门和输入门，更新细胞状态。
+
    $$
    C_t=f_t*C_{t-1}+i_t*\tilde{C}_t
    $$
 
 4. **输出门（Output Gate）**：决定当前时间步的输出是什么，并影响下一时间步的隐状态。
+
    $$
    o_t=\sigma(W_o\cdot[h_{t-1},x_t]+b_o)
    $$
 
 5. **隐藏状态**：根据当前细胞状态与输出门计算
+
    $$
    h_t=o_t*tanh(C_t)
    $$
 
 6. **当前时间步输出**：将当前时间步的隐藏状态放入全连接层中
 
-**LSTM缺点**：
+**LSTM 缺点**：
 
 - 结构复杂，包含更多的参数，可能导致更高的内存消耗和计算成本。
-- 尽管比RNN有所改进，但在极长的序列上仍然可能遇到梯度消失/爆炸的问题。
+- 尽管比 RNN 有所改进，但在极长的序列上仍然可能遇到梯度消失/爆炸的问题。
 
 # 4. GRU
 
-`GRU`（Gated Recurrent Unit）：解决标准RNN中的梯度消失和梯度爆炸问题，并且相比于另一种流行的RNN变体LSTM（Long Short-Term Memory），GRU拥有**更少的参数**
+`GRU`（Gated Recurrent Unit）：解决标准 RNN 中的梯度消失和梯度爆炸问题，并且相比于另一种流行的 RNN 变体 LSTM（Long Short-Term Memory），GRU 拥有**更少的参数**
 
-<img src="..\Images\b7e8bf92262c4fb1aa53c519015cab1b.png" alt="b7e8bf92262c4fb1aa53c519015cab1b" style="zoom: 80%;" />
+<img src="./images/readme/GRU.png" alt="b7e8bf92262c4fb1aa53c519015cab1b" style="zoom: 80%;" />
 
 1. **更新门 (z_t)**：
 
@@ -371,10 +384,10 @@ LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），
      h_t=z_t*h_{t-1}+(1-z_t)*\tilde{h}_t
      $$
 
-**GRU缺点**：
+**GRU 缺点**：
 
-- GRU通常比LSTM更快且参数更少，但在一些复杂的任务中，它可能不如LSTM那样强大
-- 与LSTM一样，GRU也存在一定的计算开销，特别是当序列非常长时。
+- GRU 通常比 LSTM 更快且参数更少，但在一些复杂的任务中，它可能不如 LSTM 那样强大
+- 与 LSTM 一样，GRU 也存在一定的计算开销，特别是当序列非常长时。
 
 # 5. Transformer
 
@@ -383,9 +396,11 @@ LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），
 1. 编码器：将输入序列映射成一个**关注上下文信息的序列**，然后将这个序列映射成 key 和 value 输入到解码器中。
 
    - **多头自注意力机制 (Multi-Head Self-Attention)**
+
      - 输入序列的每个词都与序列中其他词计算注意力权重，从而获得全局信息。
 
    - **前馈神经网络 (Feed-Forward Network, FFN)**
+
      - 每个位置独立通过一个两层的 MLP，提升表示能力。
 
    - **残差连接 (Residual) + `LayerNorm`**
@@ -401,16 +416,18 @@ LSTM（Long Short-Term Memory）是一种特殊的循环神经网络（RNN），
    - **残差连接 + `LayerNorm`**
      - 稳定训练。
 
-<img src="..\Images\image-20240928154204680.png" alt="image-20240928154204680" style="zoom: 50%;" />
+<img src="./images/readme/Transformer.png" alt="image-20240928154204680" style="zoom: 50%;" />
 
 ## 5.2 Self-Attention
 
-<img src="..\Images\image-20240928154415608.png" alt="image-20240928154415608" style="zoom:45%;" />
+<img src="./images/readme/Self-Attention.png" alt="image-20240928154415608" style="zoom:45%;" />
 
-Q表示查询向量，K表示键，V表示值，其中Q和K的维度相同:d_k
+Q 表示查询向量，K 表示键，V 表示值，其中 Q 和 K 的维度相同:d_k
+
 $$
 Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
+
 ## 5.3 Positional Encoding
 
 $$
@@ -439,4 +456,3 @@ $$
 在**推理（预测）**时：解码器的输入是它自己上一时间步的预测值。
 
 # 6. BERT
-
